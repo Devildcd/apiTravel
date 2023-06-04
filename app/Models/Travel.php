@@ -93,12 +93,33 @@ class Travel extends Model
             Rule::requiredIf(function () {
                 return request()-> input('flyType') === 'Ida y vuelta';
             }),
-
+            
             'nullable',
             'date',
             'after:dateOrigin',
+            function ($attribute, $value, $fail) {
+                if (!Travel::validateDateDestiny(request()->input('flyType'), $value)) {
+                    $fail('La fechaDestiny debe ser null cuando flyType es Solo Ida.');
+                }
+            },
         ],
         ];
+    }
+
+        /**
+     * Función para validar que si flyType = 'Solo Ida', la fechaDestiny sea null.
+     *
+     * @param string $flyType
+     * @param mixed $fechaDestiny
+     * @return bool
+     */
+    public static function validateDateDestiny(string $flyType, $fechaDestiny): bool
+    {
+        if ($flyType === 'Solo Ida' && $fechaDestiny !== null) {
+            return false;
+        }
+
+        return true;
     }
 
     

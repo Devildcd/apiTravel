@@ -149,6 +149,14 @@ class TravelController extends Controller
         $viaje-> origin = $request-> origin;
         $viaje-> dateOrigin = $request-> dateOrigin;
         $viaje-> destiny = $request-> destiny;
+
+        $flyType = $viaje-> flyType;
+
+        if(!Travel::validateDateDestiny($flyType, $request-> dateDestiny)) {
+
+            return response()->json(['error' => 'La fechaDestiny debe ser null cuando flyType es Solo Ida'], 422);
+        }
+
         $viaje-> dateDestiny = $request-> dateDestiny;
     
         $viaje->save();
